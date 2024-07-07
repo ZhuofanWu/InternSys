@@ -7,10 +7,9 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class userIdentity {
+public class UserIdentity {
     private String UUID;
     private String login_mail;
     private String password;
-    private String salt;
     private String role;
 }
