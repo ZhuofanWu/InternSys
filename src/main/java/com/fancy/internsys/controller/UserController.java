@@ -12,7 +12,7 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @GetMapping("/login")
+    @PostMapping("/login")
     public ResponseEntity<?> loginUser(@RequestBody UserReq userReq){
         boolean isValid= userService.validateUser(userReq.getLogin_mail(),userReq.getPassword(),userReq.getRole());
         if (isValid) {
