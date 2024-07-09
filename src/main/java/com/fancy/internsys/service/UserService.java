@@ -36,10 +36,24 @@ public class UserService {
         if(loginUser==null){ //不存在用户
             return false;
         }
-        if(passwordService.checkPassword(rawPassword,loginUser.getPassword())&& Objects.equals(role, loginUser.getRole())){ //验证密码和身份
-            return true;
-        }else {
+        //验证密码和身份
+        return passwordService.checkPassword(rawPassword, loginUser.getPassword()) && Objects.equals(role, loginUser.getRole());
+    }
+
+    public boolean changePasswordUser(String email,String oldPassword,String newPassword){
+        UserIdentity loginUser = userMapper.searchUser(email);
+        if(loginUser==null){
             return false;
         }
+        if(!passwordService.checkPassword(oldPassword, loginUser.getPassword())){ //不做role的鉴别 放在controller里面
+            return false;
+        } else {
+            userMapper.changePasswordUser(email,newPassword);
+            return true;
+        }
+    }
+
+    public boolean resetPasswordUser(String email,String password){
+        return true;
     }
 }
