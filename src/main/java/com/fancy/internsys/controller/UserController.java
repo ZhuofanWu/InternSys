@@ -1,9 +1,10 @@
 package com.fancy.internsys.controller;
 
+import com.fancy.internsys.dto.ResetPasswordReq;
 import com.fancy.internsys.dto.UserReq;
-import com.fancy.internsys.mapper.UserMapper;
 import com.fancy.internsys.service.UserService;
 import com.fancy.internsys.util.JwtUtil;
+import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,11 +31,31 @@ public class UserController {
     public ResponseEntity<?> registerUser(@RequestBody UserReq userReq){
         boolean regState = userService.registerUser(userReq.getLogin_mail(), userReq.getPassword(), userReq.getRole());
         if(regState){
-            System.out.println(0);
             return ResponseEntity.ok("Register successful");
         }else {
-            System.out.println(1);
             return ResponseEntity.status(401).body("Account exist");
+        }
+    }
+
+    @GetMapping("/resetpassword")
+    public ResponseEntity<?> preResetPassword(@RequestParam("email") String email) throws MessagingException {
+        boolean status = userService.searchUser(email);
+        if(!status){
+            return ResponseEntity.status(401).body("User not exist");
+        }else {
+            userService.preResetPasswordUser(email);
+            return ResponseEntity.ok("Email sent");
+        }
+    }
+
+    @PostMapping("/resetpassword")
+    public ResponseEntity<?> ResetPassword(@RequestBody ResetPasswordReq req){
+        boolean status = userService.searchUser(req.getLogin_mail());
+        if(!status){
+            return ResponseEntity.status(401).body("User not exist");
+        }else {
+            userService.resetPassword(req.getLogin_mail(), req.getToken(), req.getPassword());
+            return ResponseEntity.ok("Password reset");
         }
     }
 }

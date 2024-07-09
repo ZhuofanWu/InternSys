@@ -2,9 +2,13 @@ package com.fancy.internsys.service;
 
 import com.fancy.internsys.mapper.UserMapper;
 import com.fancy.internsys.pojo.UserIdentity;
+import com.fancy.internsys.pojo.UserPasswordReset;
+import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
+import java.util.Calendar;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -14,6 +18,8 @@ public class UserService {
     private UserMapper userMapper;
     @Autowired
     private PasswordService passwordService;
+    @Autowired
+    private EmailService emailService;
 
     public boolean registerUser(String email,String rawPassword,String role){
         UserIdentity newUser;
@@ -53,7 +59,36 @@ public class UserService {
         }
     }
 
-    public boolean resetPasswordUser(String email,String password){
-        return true;
+    public void preResetPasswordUser(String email) throws MessagingException {
+        String token = passwordService.generateRandomToken(6);
+        // 获取当前时间
+        Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis());
+        // 创建Calendar实例并添加2小时
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(currentTimestamp.getTime());
+        calendar.add(Calendar.HOUR, 2);
+        // 获取当前时间加2小时的时间戳
+        Timestamp newTimestamp = new Timestamp(calendar.getTimeInMillis());
+        //调用mapper写入
+        UserPasswordReset user = new UserPasswordReset();
+        user.setLogin_mail(email);
+        user.setToken(token);
+        user.setExpire_time(newTimestamp);
+        userMapper.insertToken(user);
+        //发email
+        try{
+            emailService.sendMail(email,"您的密码重置验证码",emailService.resetPasswordEmailPre(email,token),true);
+        }catch (MessagingException e){
+            throw new MessagingException("邮件失败",e);
+        }
+    }
+
+    public boolean searchUser(String email){
+        UserIdentity user = userMapper.searchUser(email);
+        return user != null;
+    }
+
+    public void resetPassword(String email,String token,String password){
+
     }
 }

@@ -1,6 +1,7 @@
 package com.fancy.internsys.mapper;
 
 import com.fancy.internsys.pojo.UserIdentity;
+import com.fancy.internsys.pojo.UserPasswordReset;
 import org.apache.ibatis.annotations.*;
 
 @Mapper
@@ -16,4 +17,7 @@ public interface UserMapper {
 
     @Delete("DELETE from user_basic where login_mail=#{login_mail}")
     void deleteUser(String login_mail);
+
+    @Insert("INSERT INTO user_reset_token (login_mail, token, expire_time) VALUES (#{login_mail},#{token},#{expire_time})")
+    void insertToken(UserPasswordReset userPasswordReset);
 }
