@@ -29,6 +29,7 @@ public class EmailService {
     public void sendMail(String to, String subject, String content,boolean isHtml) throws MessagingException {
         try {
             MimeMessageHelper messageHelper = new MimeMessageHelper(javaMailSender.createMimeMessage(), true);
+            messageHelper.setFrom(from);
             messageHelper.setTo(to);
             messageHelper.setSubject(subject);
             messageHelper.setText(content, isHtml);
@@ -45,7 +46,6 @@ public class EmailService {
         context.setVariable("name", name);
         context.setVariable("token",token);
         context.setVariable("date",today.toString());
-        String content = templateEngine.process("PasswordResetTemplate.html",context);
-        return content;
+        return templateEngine.process("PasswordResetTemplate.html",context);
     }
 }

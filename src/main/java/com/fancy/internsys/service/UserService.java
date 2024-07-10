@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -71,6 +72,8 @@ public class UserService {
         Timestamp newTimestamp = new Timestamp(calendar.getTimeInMillis());
         //调用mapper写入
         UserPasswordReset user = new UserPasswordReset();
+        String uuid= UUID.randomUUID().toString();
+        user.setUuid(uuid);
         user.setLogin_mail(email);
         user.setToken(token);
         user.setExpire_time(newTimestamp);
@@ -88,7 +91,19 @@ public class UserService {
         return user != null;
     }
 
-    public void resetPassword(String email,String token,String password){
-
+    public boolean resetPassword(String email,String token,String password){
+        List<UserPasswordReset> users = userMapper.validateToken(email);
+        for(UserPasswordReset user : users){
+            if(user.getToken().equals(token)){
+                Timestamp expire_time = user.getExpire_time();
+                Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis());
+                if(!currentTimestamp.after(expire_time)){
+                    userMapper.changePasswordUser(email,passwordService.encodePassword(password));
+                    userMapper.deleteExpiredToken(user.getUuid());
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

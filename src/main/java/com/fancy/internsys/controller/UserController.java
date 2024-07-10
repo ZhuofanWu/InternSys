@@ -54,8 +54,11 @@ public class UserController {
         if(!status){
             return ResponseEntity.status(401).body("User not exist");
         }else {
-            userService.resetPassword(req.getLogin_mail(), req.getToken(), req.getPassword());
-            return ResponseEntity.ok("Password reset");
+            if(!userService.resetPassword(req.getLogin_mail(), req.getToken(), req.getPassword())){
+                return ResponseEntity.status(401).body("Token expired/Wrong token");
+            }else {
+                return ResponseEntity.ok("Password reset");
+            }
         }
     }
 }
