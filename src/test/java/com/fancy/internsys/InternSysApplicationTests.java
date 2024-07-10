@@ -16,9 +16,8 @@ class InternSysApplicationTests {
     @Autowired
     private UserController userController;
     @Test
-    void contextLoads() throws MessagingException {
-        emailService.sendMail("1120774767@qq.com","password","SMTP test",false);
-//        userController.preResetPassword("1120774767@qq.com");
+    void contextLoads(){
+
     }
 
 }
