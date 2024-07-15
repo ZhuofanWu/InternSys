@@ -12,6 +12,7 @@ public class StudentInfo {
     private String uuid;
     private String name;
     private String gender;
+    private String student_id;
     private int start_year;
     private String major;
     private String tel;

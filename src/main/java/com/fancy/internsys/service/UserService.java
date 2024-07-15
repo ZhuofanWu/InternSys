@@ -1,8 +1,8 @@
 package com.fancy.internsys.service;
 
+import com.fancy.internsys.mapper.UserInfoMapper;
 import com.fancy.internsys.mapper.UserMapper;
-import com.fancy.internsys.pojo.UserIdentity;
-import com.fancy.internsys.pojo.UserPasswordReset;
+import com.fancy.internsys.pojo.*;
 import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,6 +21,8 @@ public class UserService {
     private PasswordService passwordService;
     @Autowired
     private EmailService emailService;
+    @Autowired
+    private UserInfoMapper userInfoMapper;
 
     public boolean registerUser(String email,String rawPassword,String role){
         UserIdentity newUser;
@@ -35,6 +37,7 @@ public class UserService {
         newUser.setPassword(passwordService.encodePassword(rawPassword));
         newUser.setRole(role);
         userMapper.addUser(newUser);
+        initUserInfo(uuid,role); //将用户按照权限初始化，uuid同时设置。
         return true;
     }
 
@@ -105,5 +108,39 @@ public class UserService {
             }
         }
         return false;
+    }
+
+    public void initUserInfo(String uuid,String role){
+        switch (role){
+            case "student":{
+                StudentInfo studentInfo = new StudentInfo(0,"","default-name","none","2022090901011",1990,"major","1001010","default@email.com","");
+                studentInfo.setUuid(uuid);
+                userInfoMapper.insertStudent(studentInfo);
+                break;
+            }
+            case "teacher":{
+                TeacherInfo teacherInfo = new TeacherInfo(0,"","default-name","10001010","default@email.com");
+                teacherInfo.setUuid(uuid);
+                userInfoMapper.insertTeacher(teacherInfo);
+                break;
+            }
+            case "sysadmin":{
+                SysadminInfo sysadminInfo = new SysadminInfo(0,"","default-name","SISE","100","default@email.com");
+                sysadminInfo.setUuid(uuid);
+                userInfoMapper.insertSysAdmin(sysadminInfo);
+                break;
+            }
+            case "company":{
+                CompanyInfo companyInfo = new CompanyInfo(0,"","default-name","UB","100","default@email.com");
+                companyInfo.setUuid(uuid);
+                userInfoMapper.insertCompany(companyInfo);
+                break;
+            }
+            default:break;
+        }
+    }
+
+    public String getUserUUID(String email){
+        return userMapper.getUUID(email);
     }
 }

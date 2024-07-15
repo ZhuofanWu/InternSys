@@ -14,6 +14,9 @@ public interface UserMapper {
     @Select("SELECT UUID,login_mail,password,role FROM user_basic WHERE login_mail = #{login_mail}")
     UserIdentity searchUser(String login_mail);
 
+    @Select("SELECT UUID from user_basic where login_mail=#{login_mail}")
+    String getUUID(String login_mail);
+
     @Update("UPDATE user_basic SET password=#{password} WHERE login_mail = #{login_mail}")
     void changePasswordUser(@Param("login_mail") String login_mail,@Param("password") String password);
 

@@ -13,13 +13,14 @@ public class JwtUtil {
     private static final String SECRET_KEY = "temp";
     private static final int EXPIRE_TIME = 1000*60*60*24*3; //3days
 
-    public String generateToken(String username,String role){ //需要role来鉴权
+    public String generateToken(String uuid,String username,String role){ //需要role来鉴权
         JwtBuilder jwtBuilder = Jwts.builder();
         String jwtToken = jwtBuilder
                 .setHeaderParam("typ","jwt")
                 .setHeaderParam("alg","RS256")
                 .claim("username",username)
                 .claim("role",role)
+                .claim("uuid",uuid)
                 .setExpiration(new Date(System.currentTimeMillis()+EXPIRE_TIME))
                 .signWith(SignatureAlgorithm.RS256,SECRET_KEY)
                 .compact();
@@ -45,7 +46,11 @@ public class JwtUtil {
         return (String) getClaims(token).get("role");
     }
 
-    public boolean validateToken(String token,String username,String role){
-        return (username.equals(extractUsername(token)) && role.equals(extractRole(token)) && !isTokenExpired(token));
+    public String extractUuid(String token){
+        return (String) getClaims(token).get("uuid");
+    }
+
+    public boolean validateToken(String token,String role){
+        return (role.equals(extractRole(token)) && !isTokenExpired(token));
     }
 }

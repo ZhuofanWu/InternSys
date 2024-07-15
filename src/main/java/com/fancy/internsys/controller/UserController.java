@@ -20,7 +20,8 @@ public class UserController {
     public ResponseEntity<?> loginUser(@RequestBody UserReq userReq){
         boolean isValid= userService.validateUser(userReq.getLogin_mail(),userReq.getPassword(),userReq.getRole());
         if (isValid) {
-            String token = jwtUtil.generateToken(userReq.getLogin_mail(),userReq.getPassword());
+            String uuid = userService.getUserUUID(userReq.getLogin_mail());
+            String token = jwtUtil.generateToken(uuid,userReq.getLogin_mail(),userReq.getPassword());
             return ResponseEntity.ok("Login successful, token: " + token);
         } else {
             return ResponseEntity.status(401).body("Invalid login credentials");
