@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fancy.internsys.mapper.UserInfoMapper">
+
+    <!-- Select Queries -->
+    <select id="existCompanyUUID" parameterType="String" resultType="boolean">
+        SELECT CASE WHEN COUNT(*) > 0 THEN true ELSE false END
+        FROM user_company_info
+        WHERE uuid = #{uuid}
+    </select>
+
+    <select id="existStudentUUID" parameterType="String" resultType="boolean">
+        SELECT CASE WHEN COUNT(*) > 0 THEN true ELSE false END
+        FROM user_student_info
+        WHERE uuid = #{uuid}
+    </select>
+
+    <select id="existTeacherUUID" parameterType="String" resultType="boolean">
+        SELECT CASE WHEN COUNT(*) > 0 THEN true ELSE false END
+        FROM user_teacher_info
+        WHERE uuid = #{uuid}
+    </select>
+
+    <select id="existSysAdminUUID" parameterType="String" resultType="boolean">
+        SELECT CASE WHEN COUNT(*) > 0 THEN true ELSE false END
+        FROM user_sysadmin_info
+        WHERE uuid = #{uuid}
+    </select>
+
+    <select id="getStudentInfo" parameterType="String" resultType="com.fancy.internsys.pojo.StudentInfo">
+        SELECT * FROM user_student_info WHERE uuid = #{uuid}
+    </select>
+
+    <select id="getCompanyInfo" parameterType="String" resultType="com.fancy.internsys.pojo.CompanyInfo">
+        SELECT * FROM user_company_info WHERE uuid = #{uuid}
+    </select>
+
+    <select id="getSysAdminInfo" parameterType="String" resultType="com.fancy.internsys.pojo.SysadminInfo">
+        SELECT * FROM user_sysadmin_info WHERE uuid = #{uuid}
+    </select>
+
+    <select id="getTeacherInfo" parameterType="String" resultType="com.fancy.internsys.pojo.TeacherInfo">
+        SELECT * FROM user_teacher_info WHERE uuid = #{uuid}
+    </select>
+
+    <!-- Insert Queries -->
+    <insert id="insertCompany" parameterType="com.fancy.internsys.pojo.CompanyInfo">
+        INSERT INTO user_company_info (uuid, name, company_name, tel, email)
+        VALUES (#{uuid}, #{name}, #{companyName}, #{tel}, #{email})
+    </insert>
+
+    <insert id="insertStudent" parameterType="com.fancy.internsys.pojo.StudentInfo">
+        INSERT INTO user_student_info (uuid, name, gender, start_year, major, tel, email, self_intro)
+        VALUES (#{uuid}, #{name}, #{gender}, #{startYear}, #{major}, #{tel}, #{email}, #{selfIntro})
+    </insert>
+
+    <insert id="insertTeacher" parameterType="com.fancy.internsys.pojo.TeacherInfo">
+        INSERT INTO user_teacher_info (uuid, name, tel, email)
+        VALUES (#{uuid}, #{name}, #{tel}, #{email})
+    </insert>
+
+    <insert id="insertSysAdmin" parameterType="com.fancy.internsys.pojo.SysadminInfo">
+        INSERT INTO user_sysadmin_info (uuid, name, department, tel, email)
+        VALUES (#{uuid}, #{name}, #{department}, #{tel}, #{email})
+    </insert>
+
+    <!-- Update Queries -->
+    <update id="updateCompany" parameterType="com.fancy.internsys.pojo.CompanyInfo">
+        UPDATE user_company_info
+        SET name = #{name}, company_name = #{companyName}, tel = #{tel}, email = #{email}
+        WHERE uuid = #{uuid}
+    </update>
+
+    <update id="updateStudent" parameterType="com.fancy.internsys.pojo.StudentInfo">
+        UPDATE user_student_info
+        SET name = #{name}, gender = #{gender}, start_year = #{startYear}, major = #{major}, tel = #{tel}, email = #{email}, self_intro = #{selfIntro}
+        WHERE uuid = #{uuid}
+    </update>
+
+    <update id="updateTeacher" parameterType="com.fancy.internsys.pojo.TeacherInfo">
+        UPDATE user_teacher_info
+        SET name = #{name}, tel = #{tel}, email = #{email}
+        WHERE uuid = #{uuid}
+    </update>
+
+    <update id="updateSysAdmin" parameterType="com.fancy.internsys.pojo.SysadminInfo">
+        UPDATE user_sysadmin_info
+        SET name = #{name}, department = #{department}, tel = #{tel}, email = #{email}
+        WHERE uuid = #{uuid}
+    </update>
+</mapper>

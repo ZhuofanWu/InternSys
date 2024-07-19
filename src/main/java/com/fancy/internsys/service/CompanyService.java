@@ -1,8 +1,10 @@
 package com.fancy.internsys.service;
 
 import com.fancy.internsys.dto.CompanyInfoReq;
+import com.fancy.internsys.mapper.InternJobsMapper;
 import com.fancy.internsys.mapper.UserInfoMapper;
 import com.fancy.internsys.pojo.CompanyInfo;
+import com.fancy.internsys.pojo.InternJob;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,6 +12,8 @@ import org.springframework.stereotype.Service;
 public class CompanyService {
     @Autowired
     private UserInfoMapper userInfoMapper;
+    @Autowired
+    private InternJobsMapper internJobsMapper;
 
     public void changeCompanyInfo(String uuid, CompanyInfoReq companyInfoReq) {
         CompanyInfo companyInfo = new CompanyInfo();
@@ -23,5 +27,17 @@ public class CompanyService {
 
     public CompanyInfo getCompanyInfo(String uuid) {
         return userInfoMapper.getCompanyInfo(uuid);
+    }
+
+    public InternJob getJob(int id){
+        return internJobsMapper.getJobById(id);
+    }
+
+    public void deleteJob(int id) {
+        internJobsMapper.deleteJobById(id);
+    }
+
+    public void updateJob(InternJob internJob) {
+        internJobsMapper.updateJob(internJob);
     }
 }

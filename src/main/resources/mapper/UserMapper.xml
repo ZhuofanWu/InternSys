@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fancy.internsys.mapper.UserMapper">
+
+    <insert id="addUser" parameterType="com.fancy.internsys.pojo.UserIdentity">
+        INSERT INTO user_basic (UUID,login_mail,password,role)
+        VALUES (#{UUID}, #{login_mail}, #{password}, #{role})
+    </insert>
+
+    <select id="searchUser" parameterType="String" resultType="com.fancy.internsys.pojo.UserIdentity">
+        SELECT UUID, login_mail, password, role
+        FROM user_basic
+        WHERE login_mail = #{login_mail}
+    </select>
+
+    <select id="getUUID" parameterType="String" resultType="String">
+        SELECT UUID
+        FROM user_basic
+        WHERE login_mail = #{login_mail}
+    </select>
+
+    <update id="changePasswordUser">
+        UPDATE user_basic
+        SET password = #{password}
+        WHERE login_mail = #{login_mail}
+    </update>
+
+    <delete id="deleteUser" parameterType="String">
+        DELETE FROM user_basic
+        WHERE login_mail = #{login_mail}
+    </delete>
+
+    <insert id="insertToken" parameterType="com.fancy.internsys.pojo.UserPasswordReset">
+        INSERT INTO user_reset_token (uuid, login_mail, token, expire_time)
+        VALUES (#{uuid}, #{login_mail}, #{token}, #{expire_time})
+    </insert>
+
+    <select id="validateToken" parameterType="String" resultType="com.fancy.internsys.pojo.UserPasswordReset">
+        SELECT uuid, login_mail, token, expire_time
+        FROM user_reset_token
+        WHERE login_mail = #{login_mail}
+    </select>
+
+    <select id="searchTokens" resultType="com.fancy.internsys.pojo.UserPasswordReset">
+        SELECT *
+        FROM user_reset_token
+    </select>
+
+    <delete id="deleteExpiredToken" parameterType="String">
+        DELETE FROM user_reset_token
+        WHERE uuid = #{uuid}
+    </delete>
+
+</mapper>
