@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fancy.internsys.mapper.InternJobsMapper">
+
+    <select id="getJobById" resultType="com.fancy.internsys.pojo.InternJob">
+        SELECT * FROM intern_jobs WHERE id=#{id}
+    </select>
+
+    <delete id="deleteJobById">
+        DELETE FROM intern_jobs WHERE id=#{id}
+    </delete>
+
+    <update id="updateJob">
+        UPDATE intern_jobs
+        SET job_name = #{job_name},
+            company_name = #{company_name},
+            expire_time = #{expire_time},
+            open_receive = #{open_receive},
+            grade = #{grade},
+            job_require = #{job_require},
+            competitive = #{competitive},
+            hc_number = #{hc_number},
+            resume_number = #{resume_number},
+            left_number = #{left_number}
+        WHERE id = #{id}
+    </update>
+
+    <select id="getJobNumber" resultType="int">
+        SELECT count(*) FROM intern_jobs
+    </select>
+
+    <select id="getJobsByPage" resultType="com.fancy.internsys.pojo.InternJob">
+        SELECT * FROM intern_jobs LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <insert id="insertJob">
+        INSERT INTO intern_jobs (job_name, company_name, expire_time, open_receive, grade, job_require, competitive, hc_number, resume_number, left_number)
+        VALUES (#{job_name}, #{company_name}, #{expire_time}, #{open_receive}, #{grade}, #{job_require}, #{competitive}, #{hc_number}, #{resume_number}, #{left_number})
+    </insert>
+
+    <delete id="deleteJobsByList">
+        DELETE FROM intern_jobs WHERE id IN
+        <foreach item="id" collection="idList" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

@@ -8,6 +8,8 @@ import com.fancy.internsys.pojo.InternJob;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class CompanyService {
     @Autowired
@@ -39,5 +41,21 @@ public class CompanyService {
 
     public void updateJob(InternJob internJob) {
         internJobsMapper.updateJob(internJob);
+    }
+
+    public int getJobNumber(){
+        return internJobsMapper.getJobNumber();
+    }
+
+    public void insertJob(InternJob job){
+        internJobsMapper.insertJob(job);
+    }
+
+    public List<InternJob> getJobByPage(int limit, int offset){
+        return internJobsMapper.getJobsByPage(limit,offset);
+    }
+
+    public void deleteJobsByList(List<Integer> ids){
+        internJobsMapper.deleteJobsByList(ids);
     }
 }
