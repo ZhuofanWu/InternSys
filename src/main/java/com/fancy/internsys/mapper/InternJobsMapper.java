@@ -1,5 +1,6 @@
 package com.fancy.internsys.mapper;
 
+import com.fancy.internsys.dto.InternJobReq;
 import com.fancy.internsys.pojo.InternJob;
 import org.apache.ibatis.annotations.*;
 
@@ -17,7 +18,7 @@ public interface InternJobsMapper {
 
     List<InternJob> getJobsByPage(@Param("limit") int limit, @Param("offset") int offset);
 
-    void insertJob(InternJob job);
+    void insertJob(InternJobReq job);
 
     void deleteJobsByList(@Param("idList") List<Integer> idList);
 }

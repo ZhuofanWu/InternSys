@@ -1,6 +1,7 @@
 package com.fancy.internsys.service;
 
 import com.fancy.internsys.dto.CompanyInfoReq;
+import com.fancy.internsys.dto.InternJobReq;
 import com.fancy.internsys.mapper.InternJobsMapper;
 import com.fancy.internsys.mapper.UserInfoMapper;
 import com.fancy.internsys.pojo.CompanyInfo;
@@ -47,7 +48,7 @@ public class CompanyService {
         return internJobsMapper.getJobNumber();
     }
 
-    public void insertJob(InternJob job){
+    public void insertJob(InternJobReq job){
         internJobsMapper.insertJob(job);
     }
 
