@@ -28,4 +28,6 @@ public class StudentService {
     public StudentInfo getStudentInfo(String uuid){
         return userInfoMapper.getStudentInfo(uuid);
     }
+
+
 }
