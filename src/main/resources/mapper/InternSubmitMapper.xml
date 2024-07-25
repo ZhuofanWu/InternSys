@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.mapper.InternSubmitMapper">
+
+    <insert id="insertSubmit">
+        INSERT INTO intern_submit (uuid, name, job_id, job_name, resume_id, accept)
+        VALUES (#{uuid}, #{name}, #{job_id}, #{job_name}, #{resume_id}, #{accept})
+    </insert>
+
+    <select id="searchJobLeftNumber" resultType="int">
+        SELECT left_number
+        FROM intern_jobs
+        WHERE id=#{jobId}
+    </select>
+
+    <update id="submitJob">
+        UPDATE intern_jobs
+        SET
+            resume_number = resume_number + 1,
+            left_number = CASE
+                              WHEN competitive = 1 AND left_number > 0 THEN left_number - 1
+                              ELSE left_number
+                END
+        WHERE
+            id=#{jobId}
+          AND open_receive = 1
+          AND expire_time > CURRENT_TIMESTAMP
+    </update>
+
+    <delete id="cancelSubmit">
+        DELETE from intern_submit
+        WHERE id=#{resumeSubmitId}
+    </delete>
+
+    <update id="cancelSubmitJob">
+        UPDATE intern_jobs
+        SET
+            resume_number = resume_number - 1,
+            left_number = CASE
+                WHEN competitive = 1 THEN left_number + 1
+                ELSE left_number
+                END
+        WHERE id=#{jobId}
+          -- 不允许过了投递期再更改/删除投递信息
+        AND open_receive = 1
+        AND expire_time > CURRENT_TIMESTAMP
+    </update>
+
+</mapper>

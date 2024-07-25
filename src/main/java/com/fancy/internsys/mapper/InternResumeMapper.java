@@ -22,6 +22,7 @@ public interface InternResumeMapper {
     @Select("SELECT * FROM intern_resume WHERE id=#{id}")
     InternResume selectById(int id);
 
+    //特别注意 删除简历会删除该简历所有的投递
     @Delete("DELETE FROM intern_resume WHERE id=#{id}")
     void deleteById(int id);
 }
